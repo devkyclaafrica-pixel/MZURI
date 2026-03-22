@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the MZURI platform",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["explorer", "guide", "agency", "admin"] },
+        "phoneNumber": { "type": "string" },
+        "onboardingCompleted": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "favorites": { "type": "array", "items": { "type": "string" } },
+        "bio": { "type": "string" },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "location": { "type": "string" },
+        "hourlyRate": { "type": "number" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "A conversation between two users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "lastMessage": { "type": "string" },
+        "lastMessageTime": { "type": "string", "format": "date-time" },
+        "unreadCount": { "type": "object", "additionalProperties": { "type": "number" } },
+        "excursionId": { "type": "string" },
+        "excursionTitle": { "type": "string" },
+        "participantDetails": { "type": "object" }
+      },
+      "required": ["participants", "lastMessageTime"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A single message in a chat",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "chatId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["chatId", "senderId", "text", "createdAt"]
+    },
+    "Excursion": {
+      "title": "Excursion",
+      "description": "An experience or tour offered by a guide",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "guideId": { "type": "string" },
+        "guideName": { "type": "string" },
+        "guideAvatar": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "location": { "type": "string" },
+        "locationId": { "type": "string" },
+        "price": { "type": "number" },
+        "currency": { "type": "string" },
+        "duration": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "category": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviewsCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["guideId", "title", "description", "price", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/chats/{chatId}": {
+      "schema": { "$ref": "#/entities/Chat" },
+      "description": "Chats between users"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Messages in a chat"
+    },
+    "/excursions/{excursionId}": {
+      "schema": { "$ref": "#/entities/Excursion" },
+      "description": "Excursions created by guides"
+    }
+  }
+}
